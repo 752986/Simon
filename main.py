@@ -97,11 +97,11 @@ def main():
 
 		if justClicked:
 			center_dist = dist(CENTER, Vector2(pygame.mouse.get_pos()))
-			if center_dist > 310 and center_dist < 470:
+			if center_dist > 270 and center_dist < 415:
 				pressed: SimonColor = SimonColor.GREEN # throwaway value so the type checker stops complaining
 
 				for button in [green, blue, yellow, red]:
-					if button.base_image.get_rect().move(button.offset).collidepoint(Vector2(pygame.mouse.get_pos())):
+					if button.rect.collidepoint(Vector2(pygame.mouse.get_pos())):
 						button.pressed()
 						pressed = button.simon_color
 						break
