@@ -9,6 +9,7 @@ from pygame.math import Vector2
 
 
 CENTER = Vector2(512, 512)
+SPACING = 32
 
 
 def dist(p1: Vector2, p2: Vector2) -> float:
@@ -35,9 +36,9 @@ class GameObject:
 class Button(GameObject):
 	highlight: bool
 
-	def __init__(self, image_path: str, offset: Vector2, simon_color: SimonColor, color: Color, highlight_color: Color):
+	def __init__(self, image_path: str, simon_color: SimonColor, color: Color, highlight_color: Color):
 		self.base_image = pygame.image.load(image_path).convert_alpha()
-		self.offset = offset
+		self.rect = self.base_image.get_rect()
 		self.simon_color = simon_color
 		self.color = color
 		self.highlight_color = highlight_color
@@ -49,7 +50,7 @@ class Button(GameObject):
 	def draw(self, surface: Surface):
 		image = self.base_image.copy()
 		image.fill(self.highlight_color if self.highlight else self.color, None, pygame.BLEND_MULT)
-		surface.blit(image, self.offset)
+		surface.blit(image, self.rect)
 
 
 def main():
@@ -57,10 +58,15 @@ def main():
 
 	clock = pygame.time.Clock()
 
-	green = Button("res/green.png", Vector2(64, 64), SimonColor.GREEN, Color("#85ad58"), Color("#acd77e"))
-	blue = Button("res/blue.png", Vector2(512 + 64, 64), SimonColor.BLUE, Color("#46b0b5"), Color("#89e7eb"))
-	yellow = Button("res/yellow.png", Vector2(64, 512 + 64), SimonColor.YELLOW, Color("#cca737"), Color("#f9e19e"))
-	red = Button("res/red.png", Vector2(512 + 64, 512 + 64), SimonColor.RED, Color("#db6962"), Color("#f3b5ae"))
+	green = Button("res/green.png", SimonColor.GREEN, Color("#85ad58"), Color("#acd77e"))
+	blue = Button("res/blue.png", SimonColor.BLUE, Color("#46b0b5"), Color("#89e7eb"))
+	yellow = Button("res/yellow.png", SimonColor.YELLOW, Color("#cca737"), Color("#f9e19e"))
+	red = Button("res/red.png", SimonColor.RED, Color("#db6962"), Color("#f3b5ae"))
+	green.rect.bottomright = (int(CENTER.x) - SPACING, int(CENTER.y) - SPACING)
+	blue.rect.bottomleft = (int(CENTER.x) + SPACING, int(CENTER.y) - SPACING)
+	yellow.rect.topright = (int(CENTER.x) - SPACING, int(CENTER.y) + SPACING)
+	red.rect.topleft = (int(CENTER.x) + SPACING, int(CENTER.y) + SPACING)
+
 	game_objects: list[GameObject] = [green, blue, yellow, red]
 
 	sequence: list[SimonColor] = [random.choice(list(SimonColor))]
